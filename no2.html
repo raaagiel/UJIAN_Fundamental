@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>mading</title>
+    <style>
+        tr,
+        td,
+        table {
+            border: 1px solid black;
+            border-collapse: collapse;
+            background-color: rgb(253, 130, 30);
+            width: fit-content;
+            padding: 1px 100px;
+        }
+
+        button {
+            background-color: rgb(255, 0, 0);
+        }
+    </style>
+</head>
+
+<body>
+    <center>
+        <h1>Mading Majalah Mading</h1>
+        <table>
+            <thead>
+                <tr>
+                    <td>NO</td>
+                    <td>KEGIATAN</td>
+                    <td>HARI</td>
+                    <td>POSTER</td>
+                    <td>ACT</td>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td></td>
+                    <td><input oninput="onBtnSearchclick()" type="text" class="searchtodo" /></td>
+                    <td>
+                        <select oninput="onBtnSearchclick()" class="searchtodo">
+                            <option>Allday</option>
+                            <option> Senin</option>
+                            <option> Selasa</option>
+                            <option> Rabu</option>
+                            <option> Kamis</option>
+                            <option> Jumat</option>
+                            <option> Sabtu</option>
+                            <option> Minggu</option>
+                        </select>
+                    </td>
+                    <td><button onclick="onBtnSearchclick()">Search</button> </td>
+                </tr>
+            </tfoot>
+            <tfoot>
+                <p></p>
+                <tr>
+                    <td></td>
+                    <td><input type="text" class="addtodo" /></td>
+                    <td>
+                        <select class="addtodo">
+                            <option> Senin</option>
+                            <option> Selasa</option>
+                            <option> Rabu</option>
+                            <option> Kamis</option>
+                            <option> Jumat</option>
+                            <option> Sabtu</option>
+                            <option> Minggu</option>
+                        </select>
+                    </td>
+                    <td><input type="text" class="addtodo"></td>
+                    <td><button onclick="onAddTodoClick()">add</button></td>
+                </tr>
+            </tfoot>
+        </table>
+    </center>
+
+</body>
+<script>
+    class Todo {
+        constructor(a, b, c) {
+            this.kegiatan = a,
+                this.hari = b,
+                this.gambar = c
+        }
+    }
+    var listdata = [
+        new Todo('Mancing', 'Senin', 'https://images.pexels.com/photos/1630039/pexels-photo-1630039.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260 '),
+        new Todo('Balap', 'Selasa', 'https://images.pexels.com/photos/248547/pexels-photo-248547.jpeg?cs=srgb&dl=action-adults-adventure-248547.jpg&fm=jpg'),
+        new Todo('Latihan', 'Rabu', 'https://images.pexels.com/photos/54101/magic-cube-cube-puzzle-play-54101.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260'),
+    ]
+    var indexedit = -1
+    var inddexdel = -2
+    const Printdata = (a) => {
+        var output = ''
+        a.forEach((val, index) => {
+            if (index == indexedit) {
+                output += `<tr>
+                            <td>${index + 1}</td>
+                            <td><input type="text" id="edittodo${index}"></td>
+                            <td>
+                                <select id="edithari${index}">
+                                    <option> Senin</option>
+                                    <option> Selasa</option>
+                                    <option> Rabu</option>
+                                    <option> Kamis</option>
+                                    <option> Jumat</option>
+                                    <option> Sabtu</option>
+                                    <option> Minggu</option>
+                                </select>    
+                            </td>
+                            <td><input type="text" id="editimg${index}"></td>
+                            <td><button onclick="cancel()">cancel</button><button onclick="save(${index})">save</button></td>
+                        </tr>`
+            } else if (index == inddexdel) {
+                output += `<tr>
+                            <td>${index + 1}</td>
+                            <td>${val.kegiatan}</td>
+                            <td>${val.hari}</td>
+                            <td><img src=${val.gambar} height='100px'/></td>
+                            <td><button onclick="cancelDel()">No</button><button onclick="confirmDel(${index})">Yes</button></td>
+                        </tr>`
+            } else {
+                output += `<tr>
+                            <td>${index + 1}</td>
+                            <td>${val.kegiatan}</td>
+                            <td>${val.hari}</td>
+                            <td><img src=${val.gambar} height='100px'/></td>
+                            <td><button onclick="hapus(${index})">delete</button><button onclick="edit(${index})">edit</button></td>
+                        </tr>`
+            }
+        });
+        document.getElementsByTagName('tbody')[0].innerHTML = output
+    }
+    Printdata(listdata)
+    const hapus = (bebas) => {
+        inddexdel = bebas
+        Printdata(listdata)
+    }
+    const cancelDel = () => {
+        inddexdel = -2
+        Printdata(listdata)
+    }
+    const confirmDel = (bebas) => {
+        listdata.splice(bebas, 1)
+        Printdata(listdata)
+    }
+    const edit = (bebas) => {
+        indexedit = bebas
+        Printdata(listdata)
+    }
+    const cancel = () => {
+        indexedit = -1
+        Printdata(listdata)
+    }
+    const save = (bebas) => {
+        var newtodo = document.getElementById(`edittodo${bebas}`).value
+        var newhari = document.getElementById(`edithari${bebas}`).value
+        var newimg = document.getElementById(`editimg${bebas}`).value
+        console.log(newtodo, newhari, newimg)
+        if (newtodo) {
+            listdata[bebas].kegiatan = newtodo
+        }
+        if (newhari !== listdata[bebas].hari) {
+            listdata[bebas].hari = newhari
+        }
+        if (newimg) {
+            listdata[bebas].gambar = newimg
+        }
+        indexedit = -1
+        Printdata(listdata)
+    }
+    const onAddTodoClick = () => {
+        var input = document.getElementsByClassName('addtodo')
+        var todobaru = input[0].value
+        var haribaru = input[1].value
+        var imagebaru = input[2].value
+        listdata.push(new Todo(todobaru, haribaru, imagebaru))
+        Printdata(listdata)
+    }
+    const onBtnSearchclick = () => {
+        var input = document.getElementsByClassName("searchtodo")
+        var namasearch = input[0].value
+        var hariSearch = input[1].value
+        var newarr = listdata.filter((val) => val.kegiatan.toLowerCase().startsWith(namasearch.toLowerCase()) && (val.hari.toLowerCase().startsWith(hariSearch.toLowerCase()) || hariSearch == 'Allday'))
+        // console.log(newarr)
+        Printdata(newarr)
+    }
+    document.getElementsByTagName('p')[0].innerHTML = `<button onclick="logoutuser()"> logout</button>`
+    const logoutuser = () => {
+        datauserlogin = {}
+        var konfirmasi = confirm('yakin ingin keluar?')
+        if (konfirmasi) {
+            window.location = 'nomor2.html'
+        }
+    }
+
+
+</script>
+
+</html>
